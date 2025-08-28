@@ -8,17 +8,29 @@ msg () {
   echo -e "$1\n-------------------\n"
 }
 
-msg "Stopping app"
-sudo pkill app
-
 msg "Pulling from Github"
 git pull
 
-msg "Building Go binary"
-go build
 
-msg "Starting Server"
-nohup sudo ./app &>/dev/null &
+msg "Building Docker image"
+sudo docker build --tag app .
+
+msg "Stopping Docker container"
+sudo docker stop app
+sudo docker rm app
+
+msg "Starting Docker container"
+sudo docker run \
+-d \
+--name app \
+--expose 443 \
+-p 443:443 \
+-v /etc/letsencrypt:/etc/letsencrypt \
+-e SERVER_ENV=PROD \
+app
+
+msg "Pruning stale Docker images"
+sudo docker image prune -f
 
 duration=$SECONDS
 

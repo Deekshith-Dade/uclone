@@ -75,7 +75,6 @@ const main = async () => {
   }
 
   await bfs({x: 0, y: 0});
-  console.log(nodes);
 }
 
 main();
