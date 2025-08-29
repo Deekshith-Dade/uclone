@@ -29,6 +29,15 @@ sudo docker run \
 -e SERVER_ENV=PROD \
 app
 
+msg "Starting Postgres Server"
+sudo docker run \
+  -d \
+  --name db-postgres \
+  -p 5432:5432 \
+  --mount type=volume,src=app-db,target=/var/lib/postgresql/data \
+  -e POSTGRES_PASSWORD=mysecretpassword \
+  postgres:15.1-alpine
+
 msg "Pruning stale Docker images"
 sudo docker image prune -f
 
