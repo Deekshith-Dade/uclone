@@ -1,14 +1,16 @@
 package main
 
 import (
-	db "github.com/deekshith-dade/app/postgres"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
+
+	db "github.com/deekshith-dade/app/postgres"
 )
 
 func getDrivers(w http.ResponseWriter, req *http.Request){
-	rows, err := db.Connection.Query("SELECT name FROM drivers")
+		rows, err := db.Connection.Query("SELECT name FROM drivers")
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -22,14 +24,15 @@ func getDrivers(w http.ResponseWriter, req *http.Request){
 			fmt.Println(err)
 		}
 		fmt.Println(name)
-		data += fmt.Sprintf("%s", name)
+		data += fmt.Sprintf("%s ", name)
 	}
 
 	err = rows.Err()
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 	}
 	fmt.Fprintf(w, data)
+	
 }
 
 func getData(w http.ResponseWriter, req *http.Request) {
@@ -37,6 +40,7 @@ func getData(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
+	log.Println("Starting application")
 	db.InitDB()
 	defer db.Connection.Close()
 	http.Handle("/", http.FileServer(http.Dir("./static")))

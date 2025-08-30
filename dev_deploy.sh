@@ -8,33 +8,14 @@ msg () {
   echo -e "$1\n-------------------\n"  
 }
 
-msg "Building Docker image"
+msg "Building app image"
 sudo docker build --tag app .
 
 msg "Stopping Docker container"
-sudo docker stop app
-sudo docker rm app
-sudo docker stop db-postgres
-sudo docker rm db-postgres
+sudo docker compose down
 
-
-msg "Starting Docker Container"
-sudo docker run \
-  -d \
-  --name app \
-  --expose 8080 \
-  -p 8080:8080 \
-  -e SERVER_ENV=DEV \
-  app
-
-msg "Starting Postgres Server"
-sudo docker run \
-  -d \
-  --name db-postgres \
-  -p 5432:5432 \
-  --mount type=volume,src=app-db,target=/var/lib/postgresql/data \
-  -e POSTGRES_PASSWORD=mysecretpassword \
-  postgres:15.1-alpine
+msg "Starting Containers"
+sudo docker compose up -d
 
 msg "Pruning stale Docker images"
 sudo docker image prune -f
