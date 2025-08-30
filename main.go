@@ -43,7 +43,7 @@ func main() {
 	log.Println("Starting application")
 	db.InitDB()
 	defer db.Connection.Close()
-	http.Handle("/", http.FileServer(http.Dir("./static")))
+	http.Handle("/", http.FileServer(http.Dir("./frontend/dist")))
 	http.HandleFunc("/drivers", getDrivers)
   http.HandleFunc("/data", getData)
 
