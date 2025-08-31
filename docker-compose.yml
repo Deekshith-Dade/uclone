@@ -24,7 +24,7 @@ services:
     volumes:
       - app-db:/var/lib/postgresql/data
     environment:
-      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
